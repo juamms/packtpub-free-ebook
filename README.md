@@ -2,6 +2,10 @@
 
 This is a simple bot that sends [PacktPub's](https://www.packtpub.com) current [free ebook offer](https://www.packtpub.com/packt/offers/free-learning) to a [Telegram](https://telegram.org) chat.
 
+## Building
+
+On unix based systems, run `./build.sh` on the root of the project.
+
 ## Instalation
 
 This bot expects a `config.json` file to be present at the same directory as itself, with the following contents:
@@ -9,7 +13,7 @@ This bot expects a `config.json` file to be present at the same directory as its
 ```json
 {
     "token": "<your-bot-token>",
-    "chat_id": <the chat id to send the message to>
+    "chat_id": <the-chat-id-to-send-the-message-to>
 }
 ```
 
