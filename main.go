@@ -6,6 +6,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
+	"path/filepath"
 	"time"
 )
 
@@ -31,8 +34,9 @@ const (
 )
 
 var (
-	telegramURL = ""
-	convoID     = -1
+	telegramURL    = ""
+	convoID        = -1
+	executablePath = getExecutablePath()
 )
 
 func main() {
@@ -58,8 +62,23 @@ func main() {
 	sendToTelegram(message, true)
 }
 
+func safeJoin(path1, path2 string) string {
+	return filepath.FromSlash(path.Join(path1, path2))
+}
+
+func getExecutablePath() string {
+	ex, err := os.Executable()
+
+	if err != nil {
+		panic(err)
+	}
+
+	return filepath.Dir(ex)
+}
+
 func parseConfig() Config {
-	content, err := ioutil.ReadFile("config.json")
+	configPath := safeJoin(executablePath, "config.json")
+	content, err := ioutil.ReadFile(configPath)
 	if err != nil {
 		panic(err)
 	}
