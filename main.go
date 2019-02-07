@@ -24,7 +24,8 @@ type QueryResuls struct {
 }
 
 type BookData struct {
-	Title string `json:"title"`
+	Title   string `json:"title"`
+	Summary string `json:"oneLiner"`
 }
 
 const (
@@ -58,7 +59,7 @@ func main() {
 	bookData := BookData{}
 	getJSON(bookQuery, &bookData)
 
-	message := fmt.Sprintf("PacktPub book today: <a href=\"%s\">%s</a>", packtpubURL, bookData.Title)
+	message := fmt.Sprintf("PacktPub book today: <a href=\"%s\">%s</a>\n\n%s", packtpubURL, bookData.Title, bookData.Summary)
 	sendToTelegram(message, true)
 }
 
@@ -141,6 +142,7 @@ func sendToTelegram(message string, isHTML bool) {
 
 	if isHTML {
 		query.Add("parse_mode", "HTML")
+		query.Add("disable_web_page_preview", "True")
 	}
 
 	req, _ := http.NewRequest("GET", telegramURL, nil)
