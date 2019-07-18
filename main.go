@@ -13,8 +13,9 @@ import (
 )
 
 type Config struct {
-	Token  string `json:"token"`
-	ChatID int    `json:"chat_id"`
+	Token    string `json:"token"`
+	ChatID   int    `json:"chat_id"`
+	UseEUURL bool   `json:"use_eu_url"`
 }
 
 type QueryResuls struct {
@@ -29,9 +30,10 @@ type BookData struct {
 }
 
 const (
-	packtpubURL = "https://www.packtpub.com/packt/offers/free-learning"
-	queryURL    = "https://services.packtpub.com/free-learning-v1/offers?dateFrom=%s&dateTo=%s"
-	bookInfoURL = "https://static.packt-cdn.com/products/%s/summary"
+	packtpubURL   = "https://www.packtpub.com/packt/offers/free-learning"
+	packtpubEUURL = "https://www.packtpub.com/eu/free-learning"
+	queryURL      = "https://services.packtpub.com/free-learning-v1/offers?dateFrom=%s&dateTo=%s"
+	bookInfoURL   = "https://static.packt-cdn.com/products/%s/summary"
 )
 
 var (
@@ -59,7 +61,14 @@ func main() {
 	bookData := BookData{}
 	getJSON(bookQuery, &bookData)
 
-	message := fmt.Sprintf("PacktPub book today: <a href=\"%s\">%s</a>\n\n%s", packtpubURL, bookData.Title, bookData.Summary)
+	var offerURL string
+	if config.UseEUURL {
+		offerURL = packtpubEUURL
+	} else {
+		offerURL = packtpubURL
+	}
+
+	message := fmt.Sprintf("PacktPub book today: <a href=\"%s\">%s</a>\n\n%s", offerURL, bookData.Title, bookData.Summary)
 	sendToTelegram(message, true)
 }
 
